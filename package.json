@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "braintrust",
+  "name": "fable-electron-elmish-react-reacttoolbox",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,12 +11,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": { 
-    "name" : "Andrew Olney", 
-    "email" : "aolney@memphis.edu", 
-    "url" : "http://andrewmolney.name/"
-    },
-  "license": "Apache-2.0",
+  "author": "",
+  "license": "Unlicense",
   "dependencies": {
     "electron": "^1.4.2",
     "core-js": "^2.4.1",

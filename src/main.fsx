@@ -14,6 +14,12 @@ let createMainWindow () =
     let options = createEmpty<BrowserWindowOptions>
     options.width <- Some 800.
     options.height <- Some 600.
+    
+    //we need this to make grid work
+    let webPreferences = createEmpty<WebPreferences>
+    webPreferences.experimentalFeatures <- Some true
+    options.webPreferences <- Some webPreferences
+
     let window = electron.BrowserWindow.Create(options)
 
     // Load the index.html of the app.

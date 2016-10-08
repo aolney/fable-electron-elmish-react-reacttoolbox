@@ -1,5 +1,5 @@
 # fable-electron-vscode-debug-helloworld
-A hello world electron app using fable to transpile js and vscode to debug the electron process using source maps
+An electron app using fable to transpile js and vscode to debug the electron process using source maps, together with elmish UI using react and react-toolbox for rendering.
 
 Adapted from 
 
@@ -7,6 +7,8 @@ Adapted from
 - [fable-electron](https://github.com/fable-compiler/fable-electron/tree/master/samples/helloworld)
 - [getting started with fable](http://kcieslak.io/Getting-Started-with-Fable-and-Webpack)
 - [debug electron apps with vscode](http://code.matsu.io/1)
+- [fable-elmish](https://github.com/fable-compiler/fable-elmish)
+- [fable-react-toolbox-starter](https://github.com/2sComplement/fable-react-toolbox-starter)
 
 ## What's Electron?
 
@@ -32,6 +34,7 @@ Additionally this sample adds
 - `fableconfig.json` - for [fable compiler options](http://fable.io/); tutorial [here](http://kcieslak.io/Getting-Started-with-Fable-and-Webpack)
 - `.vscode/launch.json` - for debugging in vscode; tutorial [here](http://code.matsu.io/1)
 - `.vscode/tasks.json` - for build/watch tasks; tutorial [here](http://kcieslak.io/Getting-Started-with-Fable-and-Webpack)
+- css from react and react-toolbox
 
 ## To Use
 
@@ -43,20 +46,20 @@ I've also installed these extensions:
 
 - [Debugger for Chrome](https://marketplace.visualstudio.com/items/msjsdiag.debugger-for-chrome). It must be version 1.1.0 or greater to allow breakpoints to be set in F#, see [here](https://github.com/octref/vscode-electron-debug/issues/2#issuecomment-251800254)
 
-   **Ionide-fsharp does not seem to be necessary**
+   **Ionide-fsharp does not seem to be necessary but useful for intellisense**
 
 From your command line:
 
 1. Clone this repository
 
-   `git clone https://github.com/aolney/fable-electron-vscode-debug-helloworld.git`
+   `git clone https://github.com/aolney/fable-electron-elmish-react-reacttoolbox.git`
 
 2. Build and Run
 
     * From command line
       1. Go into the repository
 
-         `cd fable-electron-vscode-debug-helloworld`
+         `cd fable-electron-elmish-react-reacttoolbox`
 
       2. Run fable (fableconfig.json contains the compiler options)
 
@@ -69,7 +72,7 @@ From your command line:
     * From VSCode
       1. Start VSCode
 
-         `code fable-electron-vscode-debug-helloworld`
+         `code fable-electron-elmish-react-reacttoolbox`
       2. Run the build task
 
          `View -> Command Palette ; type run build task`

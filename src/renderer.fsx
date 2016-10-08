@@ -60,42 +60,53 @@ let update (msg:Msg) (model:Model) =
 let view model dispatch =
   let onClick msg =
     OnClick <| fun _ -> msg |> dispatch 
-
-  R.div [] 
+//attempting to set up a css grid...
+  R.div [ Style [ Display "grid"; GridTemplateRows "30% 70%"; GridTemplateColumns "40% 60%" ] ]
     [
-        RT.appBar [ AppBarProps.LeftIcon "grade" ] []
-        RT.tabs [ Index model.tabIndex; TabsProps.OnChange ( TabIndex >> dispatch ) ] [
-            RT.tab [ Label "Buttons" ] [
-                R.section [] [
-                    RT.button [ Icon "help"; Label "Help"; ButtonProps.Primary true; Raised true ] []
-                    RT.button [ Icon "home"; Label "Home"; Raised true ] []
-                    RT.button [ Icon "rowing"; Floating true ] []
-                    RT.iconButton [ Icon "power_settings_new"; IconButtonProps.Primary true ] []
+        R.div [ Style [ GridArea "1 / 1 / 2 / 1" ] ] //row start / col start / row end / col end
+          [
+            RT.appBar [ AppBarProps.LeftIcon "grade" ] []
+            RT.tabs [ Index model.tabIndex; TabsProps.OnChange ( TabIndex >> dispatch ) ] [
+                RT.tab [ Label "Buttons" ] [
+                    R.section [] [
+                        RT.button [ Icon "help"; Label "Help"; ButtonProps.Primary true; Raised true ] []
+                        RT.button [ Icon "home"; Label "Home"; Raised true ] []
+                        RT.button [ Icon "rowing"; Floating true ] []
+                        RT.iconButton [ Icon "power_settings_new"; IconButtonProps.Primary true ] []
+                    ]
+                ]
+                RT.tab [ Label "Inputs" ] [
+                    R.section [] [
+                        RT.input [ Type "text"; Label "Information"; InputProps.Value model.info; InputProps.OnChange ( Info >> dispatch ) ] []
+                        RT.checkbox [ Label "Check me"; Checked model.isChecked; CheckboxProps.OnChange ( Check >> dispatch ) ] []
+                        RT.switch [ Label "Switch me"; Checked model.isChecked; SwitchProps.OnChange(  Check >> dispatch ) ] []
+                    ]
+                ]
+                RT.tab [ Label "List" ] [
+                    RT.list [] [
+                        RT.listSubHeader [ Caption "Listing" ] []
+                        RT.listDivider [] []
+                        RT.listItem [ Caption "Item 1"; Legend "Keeps it simple" ] []
+                        RT.listDivider [] []
+                        RT.listItem [ Caption "Item 2"; Legend "Turns it up a notch"; RightIcon <| Case2("star") ] []
+                        RT.listDivider [] []
+                        RT.listItem [ Caption "Item 3"; Legend "Turns it up a notch 2"; RightIcon <| Case2("star") ] []
+                        RT.listDivider [] []
+                        RT.listItem [ Caption "Item 4"; Legend "Turns it up a notch 3"; RightIcon <| Case2("star") ] []
+                    ]
                 ]
             ]
-            RT.tab [ Label "Inputs" ] [
-                R.section [] [
-                    RT.input [ Type "text"; Label "Information"; InputProps.Value model.info; InputProps.OnChange ( Info >> dispatch ) ] []
-                    RT.checkbox [ Label "Check me"; Checked model.isChecked; CheckboxProps.OnChange ( Check >> dispatch ) ] []
-                    RT.switch [ Label "Switch me"; Checked model.isChecked; SwitchProps.OnChange(  Check >> dispatch ) ] []
-                ]
-            ]
-            RT.tab [ Label "List" ] [
-                RT.list [] [
-                    RT.listSubHeader [ Caption "Listing" ] []
-                    RT.listDivider [] []
-                    RT.listItem [ Caption "Item 1"; Legend "Keeps it simple" ] []
-                    RT.listDivider [] []
-                    RT.listItem [ Caption "Item 2"; Legend "Turns it up a notch"; RightIcon <| Case2("star") ] []
-                ]
-            ]
-        ]
-        RT.button [ Icon "add"; Label "Add"; Raised true; onClick Increment ] []
-        R.div [] [ unbox (string model.count) ]
-        R.div [] [ unbox (string model.tabIndex) ]
-        R.div [] [ unbox (string model.isChecked) ]
-        R.div [] [ unbox (string model.info) ]
-        RT.button [ Icon "remove"; Label "Remove"; Raised true; onClick Decrement ] []
+          ]
+        R.div [ Style [ GridArea "1 / 2 / 1 / 2"  ] ]
+        //R.div [ Style [ GridColumnStart "2"; GridColumnEnd "2" ] ]
+          [
+            RT.button [ Icon "add"; Label "Add"; Raised true; onClick Increment ] []
+            R.div [] [ unbox (string model.count) ]
+            R.div [] [ unbox (string model.tabIndex) ]
+            R.div [] [ unbox (string model.isChecked) ]
+            R.div [] [ unbox (string model.info) ]
+            RT.button [ Icon "remove"; Label "Remove"; Raised true; onClick Decrement ] []
+          ]
     ]
 
 
