@@ -1,4 +1,4 @@
-# fable-electron-vscode-debug-helloworld
+# fable-electron-elmish-react-reacttoolbox
 An electron app using fable to transpile js and vscode to debug the electron process using source maps, together with elmish UI using react and react-toolbox for rendering.
 
 Adapted from 
@@ -83,4 +83,4 @@ From your command line:
 
       **You can also run the `watch` task so that files are transpiled automatically on save. Enable by View -> Command Palette -> Type `tasks: run task` -> Select `watch`. Or ctrl-p and type `task watch`**
 
-#### License [CC0 (Public Domain)](LICENSE.md)
+#### License [Unlicense (Public Domain)](LICENSE.md)
