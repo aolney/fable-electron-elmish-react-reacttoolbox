@@ -61,16 +61,10 @@ let view model dispatch =
   let onClick msg =
     OnClick <| fun _ -> msg |> dispatch 
 
-(*  R.div []
-    [ R.button [ onClick Decrement ] [ unbox "-" ]
-      R.div [] [ unbox (string count) ]
-      R.button [ onClick Increment ] [ unbox "+" ]
-    ]*)
-    //OnClick (fun _ -> ChangeVisibility visibility |> dispatch) 
   R.div [] 
     [
         RT.appBar [ AppBarProps.LeftIcon "grade" ] []
-        RT.tabs [ Index model.tabIndex; TabsProps.OnChange (fun i -> TabIndex i |> dispatch ) ] [
+        RT.tabs [ Index model.tabIndex; TabsProps.OnChange ( TabIndex >> dispatch ) ] [
             RT.tab [ Label "Buttons" ] [
                 R.section [] [
                     RT.button [ Icon "help"; Label "Help"; ButtonProps.Primary true; Raised true ] []
@@ -81,9 +75,9 @@ let view model dispatch =
             ]
             RT.tab [ Label "Inputs" ] [
                 R.section [] [
-                    RT.input [ Type "text"; Label "Information"; InputProps.Value model.info; InputProps.OnChange (fun v -> Info v |> dispatch ) ] []
-                    RT.checkbox [ Label "Check me"; Checked model.isChecked;] []// CheckboxProps.OnChange (fun v -> Checked v |> dispatch ) ] []
-                    RT.switch [ Label "Switch me"; Checked model.isChecked;] [] // SwitchProps.OnChange( fun v -> Checked v |> dispatch ) ] []
+                    RT.input [ Type "text"; Label "Information"; InputProps.Value model.info; InputProps.OnChange ( Info >> dispatch ) ] []
+                    RT.checkbox [ Label "Check me"; Checked model.isChecked; CheckboxProps.OnChange ( Check >> dispatch ) ] []
+                    RT.switch [ Label "Switch me"; Checked model.isChecked; SwitchProps.OnChange(  Check >> dispatch ) ] []
                 ]
             ]
             RT.tab [ Label "List" ] [
@@ -96,6 +90,12 @@ let view model dispatch =
                 ]
             ]
         ]
+        RT.button [ Icon "add"; Label "Add"; Raised true; onClick Increment ] []
+        R.div [] [ unbox (string model.count) ]
+        R.div [] [ unbox (string model.tabIndex) ]
+        R.div [] [ unbox (string model.isChecked) ]
+        R.div [] [ unbox (string model.info) ]
+        RT.button [ Icon "remove"; Label "Remove"; Raised true; onClick Decrement ] []
     ]
 
 
