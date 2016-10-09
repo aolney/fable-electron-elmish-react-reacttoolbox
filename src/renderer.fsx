@@ -19,6 +19,17 @@ module RT = Fable.Helpers.ReactToolbox
 
 open R.Props
 
+// Local storage interface
+module S =
+    let private STORAGE_KEY = "fable-electron-elmish-react-reacttoolbox"
+    let load<'T> (): 'T option =
+        Browser.localStorage.getItem(STORAGE_KEY)
+        |> unbox 
+        |> Core.Option.map (JS.JSON.parse >> unbox<'T>)
+
+    let save<'T> (model: 'T) =
+        Browser.localStorage.setItem(STORAGE_KEY, JS.JSON.stringify model)
+
 // MODEL
 
 type Model = {
@@ -36,12 +47,14 @@ type Msg =
   | Check of bool
   | Info of string
 
-let init () =
-  { count = 0; tabIndex = 0; isChecked = true; info = "something here" }
+let emptyModel =  { count = 0; tabIndex = 0; isChecked = true; info = "something here" }
+
+let init = function
+  | Some savedModel -> savedModel
+  | _ -> emptyModel
 
 // UPDATE
-
-let update (msg:Msg) (model:Model) =
+let update (msg:Msg) (model:Model)  =
   match msg with
   | Increment ->
       { model with count = model.count + 1 }
@@ -57,10 +70,11 @@ let update (msg:Msg) (model:Model) =
 
 // VIEW
 
+// Monolithic version
 let view model dispatch =
   let onClick msg =
     OnClick <| fun _ -> msg |> dispatch 
-//attempting to set up a css grid...
+
   R.div [ Style [ Display "grid"; GridTemplateRows "30% 70%"; GridTemplateColumns "40% 60%" ] ]
     [
         R.div [ Style [ GridArea "1 / 1 / 2 / 1" ] ] //row start / col start / row end / col end
@@ -109,11 +123,72 @@ let view model dispatch =
           ]
     ]
 
+//Example view that is more modular, splitting into major grid elements
+let viewLeftPane model dispatch =
+    let onClick msg =
+        OnClick <| fun _ -> msg |> dispatch 
+    
+    R.div [ Style [ GridArea "1 / 1 / 2 / 1" ] ] //row start / col start / row end / col end    
+        [
+            RT.appBar [ AppBarProps.LeftIcon "grade" ] []
+            RT.tabs [ Index model.tabIndex; TabsProps.OnChange ( TabIndex >> dispatch ) ] [
+                RT.tab [ Label "Buttons" ] [
+                    R.section [] [
+                        RT.button [ Icon "help"; Label "Help"; ButtonProps.Primary true; Raised true ] []
+                        RT.button [ Icon "home"; Label "Home"; Raised true ] []
+                        RT.button [ Icon "rowing"; Floating true ] []
+                        RT.iconButton [ Icon "power_settings_new"; IconButtonProps.Primary true ] []
+                    ]
+                ]
+                RT.tab [ Label "Inputs" ] [
+                    R.section [] [
+                        RT.input [ Type "text"; Label "Information"; InputProps.Value model.info; InputProps.OnChange ( Info >> dispatch ) ] []
+                        RT.checkbox [ Label "Check me"; Checked model.isChecked; CheckboxProps.OnChange ( Check >> dispatch ) ] []
+                        RT.switch [ Label "Switch me"; Checked model.isChecked; SwitchProps.OnChange(  Check >> dispatch ) ] []
+                    ]
+                ]
+                RT.tab [ Label "List" ] [
+                    RT.list [] [
+                        RT.listSubHeader [ Caption "Listing" ] []
+                        RT.listDivider [] []
+                        RT.listItem [ Caption "Item 1"; Legend "Keeps it simple" ] []
+                        RT.listDivider [] []
+                        RT.listItem [ Caption "Item 2"; Legend "Turns it up a notch"; RightIcon <| Case2("star") ] []
+                        RT.listDivider [] []
+                        RT.listItem [ Caption "Item 3"; Legend "Turns it up a notch 2"; RightIcon <| Case2("star") ] []
+                        RT.listDivider [] []
+                        RT.listItem [ Caption "Item 4"; Legend "Turns it up a notch 3"; RightIcon <| Case2("star") ] []
+                    ]
+                ]
+            ]
+        ]
+
+let viewRightPane model dispatch = 
+    let onClick msg =
+        OnClick <| fun _ -> msg |> dispatch 
+
+    R.div [ Style [ GridArea "1 / 2 / 1 / 2"  ] ]
+        [
+        RT.button [ Icon "add"; Label "Add"; Raised true; onClick Increment ] []
+        R.div [] [ unbox (string model.count) ]
+        R.div [] [ unbox (string model.tabIndex) ]
+        R.div [] [ unbox (string model.isChecked) ]
+        R.div [] [ unbox (string model.info) ]
+        RT.button [ Icon "remove"; Label "Remove"; Raised true; onClick Decrement ] []
+        ]
+
+let viewMain model dispatch =
+    R.div [ Style [ Display "grid"; GridTemplateRows "30% 70%"; GridTemplateColumns "40% 60%" ] ]
+        [
+            viewLeftPane model dispatch
+            viewRightPane model dispatch
+        ]
 
 // App
 let program = 
-    //Program.mkProgram (S.load >> init) update
-    Program.mkSimple init update
+    //fable-elmish todomvc has a Program.mkProgram example, but what that buys you is currently unclear to me
+    //also we imitate their storage here but they have no save to storage wired up, so this is not doing anything right now
+    Program.mkSimple (S.load >> init) update
     |> Program.withConsoleTrace
 
 type App() as this =
@@ -130,7 +205,9 @@ type App() as this =
         this.props <- true
 
     member this.render() =
-        view this.state dispatch
+        //two options to look at: a monolithic view or a view that has been partially deaggregated
+        //view this.state dispatch
+        viewMain this.state dispatch
 
 ReactDom.render(
         R.com<App,_,_> () [],
